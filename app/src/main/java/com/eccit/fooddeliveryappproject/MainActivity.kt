@@ -1,65 +1,29 @@
 package com.eccit.fooddeliveryappproject
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.eccit.fooddeliveryappproject.adapter.RestaurantListAdapter
-import com.eccit.fooddeliveryappproject.models.RestaurantModel
-import com.google.gson.Gson
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.Reader
-import java.io.StringWriter
-import java.io.Writer
-import java.nio.Buffer
+import com.eccit.fooddeliveryappproject.adapter.DishAdapter
+import com.eccit.fooddeliveryappproject.models.Dish
 
-class MainActivity : AppCompatActivity(), RestaurantListAdapter.RestaurantListClickListener {
+class MainActivity : AppCompatActivity() {
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val actionBar: ActionBar? = supportActionBar
-        actionBar?.setTitle("Restaurant List")
+        val recyclerview = findViewById<RecyclerView>(R.id.recyclerview)
+        recyclerview.layoutManager = LinearLayoutManager(this)
 
-        val restaurantModel = getRestaurantData()
-        initRecyclerView(restaurantModel)
+        val data = ArrayList<Dish>()
 
-    }
+        data.add(Dish(R.drawable.cheeseburger, "Cheese Burger", "Our simple, classic cheeseburger begins with a 100% pure beef burger patty seasoned with just a pinch of salt and pepper."))
+        data.add(Dish(R.drawable.cheeseburger, "Fried Chicken", "Lorem ipsum sir dolor amet..."))
+        data.add(Dish(R.drawable.ic_keyboard_black_24dp, "Coba aja", "Lorem ipsum sir dolor amet..."))
 
-    private fun initRecyclerView(restaurantList: List<RestaurantModel?>?) {
-        val recyclerViewRestaurant = findViewById<RecyclerView>(R.id.recyclerViewRestaurant)
-        recyclerViewRestaurant.layoutManager = LinearLayoutManager(this)
-        val adapter = RestaurantListAdapter(restaurantList)
-        recyclerViewRestaurant.adapter = adapter
-    }
-
-    private fun getRestaurantData(): List<RestaurantModel?>? {
-        val inputStream: InputStream = resources.openRawResource(R.raw.restaurant)
-        val writer: Writer = StringWriter()
-        val buffer = CharArray(1024)
-        try {
-            val reader: Reader = BufferedReader(InputStreamReader(inputStream, "UTF-8"))
-            var n : Int
-            while (reader.read(buffer).also { n = it } != -1) {
-                writer.write(buffer, 0, n)
-
-            }
-
-        }catch (e: Exception){}
-        val jsonStr: String = writer.toString()
-        val gson = Gson()
-        val restaurantModel = gson.fromJson<Array<RestaurantModel>>(jsonStr, Array<RestaurantModel>::class.java).toList()
-
-        return restaurantModel
-    }
-
-    override fun onItemClick(restaurantModel: RestaurantModel) {
-         val intent = Intent(this@MainActivity, RestaurantMenuActivity::class.java)
-        intent.putExtra("RestaurantModel", restaurantModel)
-        startActivity(intent)
+        val adapter = DishAdapter(data)
+        recyclerview.adapter = adapter
     }
 }

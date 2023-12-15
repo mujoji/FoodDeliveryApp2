@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/biruMaca"
+    >
+    <RelativeLayout
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="120dp">
+        <RelativeLayout
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@drawable/bg_menu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:tint="#7E7878"
+                android:alpha="0.3"
+                />
+            <ImageView
+                android:src="@drawable/bg_menu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="3dp"
+                android:layout_marginRight="3dp"
+                />
+    
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bg_right"
+                android:alpha="0.2"
+                app:tint="@color/black" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bg_right"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/right"
+                app:tint="@color/unguMaca"
+                android:padding="12dp"
+                />
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_marginLeft="120dp"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/CBTitle"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:text="Cheese Burger"
+                android:textColor="@color/black"
+                android:fontFamily="@font/montserrat"
+                android:textSize="20sp"
+                android:gravity="bottom"
+                android:paddingBottom="1dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/CBdesc"
+                android:layout_width="221dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:textSize="10sp"
+                android:textColor="#4A4848"
+                android:text="Our simple, classic cheeseburger begins with a 100% pure beef burger patty seasoned with just a pinch of salt and pepper." />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/cheeseBurger"
+        android:layout_width="110dp"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:src="@drawable/cheeseburger" />
+</RelativeLayout>

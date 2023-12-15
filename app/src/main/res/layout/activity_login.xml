@@ -64,8 +64,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:backgroundTint="@color/white"
-                android:text="Login" />
+                android:backgroundTint="@color/biruMaca"
+                android:text="Login"
+                android:fontFamily="@font/montserrat"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -88,8 +90,6 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
-
-
     </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

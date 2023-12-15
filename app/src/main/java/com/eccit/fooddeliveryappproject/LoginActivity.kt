@@ -1,69 +1,98 @@
 package com.eccit.fooddeliveryappproject
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Patterns
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.eccit.fooddeliveryappproject.databinding.ActivityLoginBinding
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityLoginBinding
-    lateinit var auth: FirebaseAuth
+    lateinit var btnLogin : Button
+    lateinit var etEmail : EditText
+    lateinit var etPassword : EditText
+    lateinit var txtRegister : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityLoginBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_login)
 
-        auth = FirebaseAuth.getInstance()
+        val sharedPreference =  getSharedPreferences(
+            "app_preference", Context.MODE_PRIVATE
+        )
 
-        binding.tvToRegister.setOnClickListener{
+        var id = sharedPreference.getString("id", "").toString()
+
+        if (!id.isNullOrBlank()) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+
+        btnLogin = findViewById(R.id.btn_login)
+        etEmail = findViewById(R.id.edt_email_login)
+        etPassword = findViewById(R.id.edt_password_login)
+
+        txtRegister = findViewById(R.id.tv_to_register)
+
+        txtRegister.setOnClickListener {
             val intent = Intent(this, RegistrationActivity::class.java)
             startActivity(intent)
         }
 
-        binding.btnLogin.setOnClickListener{
-            val email = binding.edtEmailLogin.text.toString()
-            val password = binding.edtPasswordLogin.text.toString()
+        btnLogin.setOnClickListener {
+            this.auth(etEmail.text.toString(), etPassword.text.toString()) { isValid ->
+                if (!isValid) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Username atau password salah!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@auth
+                }
 
-            //Validasi Email Kosong
-            if (email.isEmpty()) {
-                binding.edtEmailLogin.error = "Email Harus Diisi"
-                binding.edtEmailLogin.requestFocus()
-                return@setOnClickListener
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
             }
-
-            //Validasi Email Tidak Valid
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                binding.edtEmailLogin.error = "Email Tidak Valid"
-                binding.edtEmailLogin.requestFocus()
-                return@setOnClickListener
-            }
-
-            //Validasi Password Kosong
-            if (password.isEmpty()) {
-                binding.edtPasswordLogin.error = "Password Harus Diisi"
-                binding.edtPasswordLogin.requestFocus()
-                return@setOnClickListener
-            }
-
-            LoginFireBase(email, password)
         }
     }
 
-    private fun LoginFireBase(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this){
-            if (it.isSuccessful){
-                Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "${it.exception?.message}", Toast.LENGTH_SHORT).show()
+    private fun auth(email: String, password: String, checkResult: (isValid: Boolean) -> Unit) {
+        val db = Firebase.firestore
+        db.collection("users").whereEqualTo("email", email)
+            .get()
+            .addOnSuccessListener { documents ->
+                var isValid = false
+
+                for (document in documents) {
+                    var pass = document.data.get("password").toString()
+
+                    if (!pass.equals(PasswordHelper.md5(password).toString() )) {
+                        break
+                    }
+
+                    val sharedPreference =  getSharedPreferences(
+                        "app_preference", Context.MODE_PRIVATE
+                    )
+
+                    var editor = sharedPreference.edit()
+                    editor.putString("id", document.id.toString())
+                    editor.putString("name", document.data.get("name").toString())
+                    editor.putString("email", document.data.get("email").toString())
+                    editor.commit()
+
+                    isValid = true
+                }
+
+                checkResult.invoke(isValid)
             }
-        }
+
     }
 }

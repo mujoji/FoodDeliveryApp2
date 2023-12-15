@@ -15,8 +15,11 @@
         android:theme="@style/Theme.FoodDeliveryAppProject"
         tools:targetApi="31">
         <activity
+            android:name=".PlacingOrderActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".RegistrationActivity"
             android:exported="false" />
